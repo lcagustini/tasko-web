@@ -9,15 +9,17 @@
         xhttp.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200){
                 let json = JSON.parse(xhttp.responseText);
-                for(let i = 0; i < json.items.length; i++){
-                    let row = document.createElement("li");
-                    let valueText = document.createTextNode(json.items[i].id);
-                    row.appendChild(valueText);
-                    row.classList.add("list-group-item");
+                for(let i = 0; i < json.boards.length; i++){
+                    for(let j = 0; j < json.boards[i].lists.length; j++){
+                        let row = document.createElement("li");
+                        let valueText = document.createTextNode(json.boards[i].lists[j].id);
+                        row.appendChild(valueText);
+                        row.classList.add("list-group-item");
 
-                    let list = document.getElementById("list");
+                        let list = document.getElementById("list");
 
-                    list.appendChild(row)
+                        list.appendChild(row)
+                    }
                 }
             }
         };
