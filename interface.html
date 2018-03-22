@@ -1,0 +1,83 @@
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-amber.min.css"/>
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script>
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200){
+                let json = JSON.parse(xhttp.responseText);
+                console.log(json);
+                for(let i = 0; i < json.boards.length; i++){
+                    let board = document.createElement("a");
+                    let boardName = document.createTextNode(json.boards[i].name);
+                    board.appendChild(boardName);
+                    board.classList.add("mdl-navigation__link");
+
+                    let navigation = document.getElementById("navbar");
+
+                    navigation.appendChild(board);
+                    for(let j = 0; j < json.boards[i].lists.length; j++){
+                        let t = document.querySelector("#listTemplate");
+                        let title = t.content.querySelector("#title");
+
+                        if(title.firstChild){
+                            title.removeChild(title.firstChild);
+                        }
+                        title.appendChild(document.createTextNode(json.boards[i].lists[j].name));
+
+                        let list = t.content.querySelector("#list");
+                        while(list.firstChild){
+                            list.removeChild(list.firstChild);
+                        }
+
+                        for(let k = 0; k < json.boards[i].lists[j].items.length; k++){
+                            let row = document.createElement("li");
+                            row.appendChild(document.createTextNode(json.boards[i].lists[j].items[k].Text));
+                            row.classList.add("mdl-list__item");
+
+                            list.appendChild(row);
+                        }
+
+                        let clone = document.importNode(t.content, true);
+                        let listsDiv = document.querySelector("#listsDiv");
+                        listsDiv.appendChild(clone);
+                    }
+                }
+            }
+        };
+        xhttp.open("GET", "http://localhost:8000/json", true);
+        xhttp.send();
+    </script>
+</head>
+<body>
+    <template id="listTemplate">
+        <div style="margin: 8px; display: inline-block;" class="mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title mdl-card--expand">
+                <h2 class="mdl-card__title-text" id="title"></h2>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <ul class="mdl-list" id="list">
+                </ul>
+            </div>
+        </div>
+    </template>
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Boards</span>
+            <nav id="navbar" class="mdl-navigation">
+            </nav>
+        </div>
+
+        <main class="mdl-layout__content">
+        <div class="page-content">
+            <br>
+            <div id="listsDiv" style="overflow: scroll;">
+            </div>
+        </div>
+        </main>
+    </div>
+</body>

@@ -9,16 +9,19 @@
         xhttp.onreadystatechange = function() {
             if(this.readyState == 4 && this.status == 200){
                 let json = JSON.parse(xhttp.responseText);
+                console.log(json);
                 for(let i = 0; i < json.boards.length; i++){
                     for(let j = 0; j < json.boards[i].lists.length; j++){
-                        let row = document.createElement("li");
-                        let valueText = document.createTextNode(json.boards[i].lists[j].id);
-                        row.appendChild(valueText);
-                        row.classList.add("list-group-item");
+                        for(let k = 0; k < json.boards[i].lists[j].items.length; k++) {
+                            let row = document.createElement("li");
+                            let valueText = document.createTextNode(json.boards[i].name + " " + json.boards[i].lists[j].name + " " + json.boards[i].lists[j].items[k].Text);
+                            row.appendChild(valueText);
+                            row.classList.add("list-group-item");
 
-                        let list = document.getElementById("list");
+                            let list = document.getElementById("list");
 
-                        list.appendChild(row)
+                            list.appendChild(row);
+                        }
                     }
                 }
             }
@@ -29,6 +32,30 @@
 </head>
 <body>
     <div class="container-fluid">
+        <div class="form-group">
+            <form method="post" action="/newBoard">
+                Board Name: <input type="text" name="name" class="form-control">
+                <br><button type="submit" class="btn btn-primary btn-block">New Board</button>
+            </form>
+
+            <br>
+
+            <form method="post" action="/newList">
+                Board Name: <input type="text" name="board" class="form-control">
+                List Name: <input type="text" name="name" class="form-control">
+                <br><button type="submit" class="btn btn-primary btn-block">New List</button>
+            </form>
+
+            <br>
+
+            <form method="post" action="/newText">
+                Board Name: <input type="text" name="board" class="form-control">
+                List Name: <input type="text" name="list" class="form-control">
+                Text: <input type="text" name="text" class="form-control">
+                <br><button type="submit" class="btn btn-primary btn-block">New Text</button>
+            </form>
+        </div>
+
         <ul id="list" class="list-group">
         </ul>
     </div>
