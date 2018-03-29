@@ -1,65 +1,17 @@
+<!doctype html>
+<html>
 <head>
     <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-amber.min.css"/>
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
     <script>
-        let xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if(this.readyState == 4 && this.status == 200){
-                let json = JSON.parse(xhttp.responseText);
-                console.log(json);
-                for(let i = 0; i < json.boards.length; i++){
-                    for(let j = 0; j < json.boards[i].lists.length; j++){
-                        for(let k = 0; k < json.boards[i].lists[j].items.length; k++) {
-                            let row = document.createElement("li");
-                            let valueText = document.createTextNode(json.boards[i].name + " " + json.boards[i].lists[j].name + " " + json.boards[i].lists[j].items[k].Text);
-                            row.appendChild(valueText);
-                            row.classList.add("list-group-item");
+var xhr = new XMLHttpRequest();
+xhr.open("POST", "/new/board", true);
+xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-                            let list = document.getElementById("list");
-
-                            list.appendChild(row);
-                        }
-                    }
-                }
-            }
-        };
-        xhttp.open("GET", "http://localhost:8000/json", true);
-        xhttp.send();
+// send the collected data as JSON
+xhr.send("{\"name\":\"what\"}");
     </script>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="form-group">
-            <form method="post" action="/newBoard">
-                Board Name: <input type="text" name="name" class="form-control">
-                <br><button type="submit" class="btn btn-primary btn-block">New Board</button>
-            </form>
-
-            <br>
-
-            <form method="post" action="/newList">
-                Board Name: <input type="text" name="board" class="form-control">
-                List Name: <input type="text" name="name" class="form-control">
-                <br><button type="submit" class="btn btn-primary btn-block">New List</button>
-            </form>
-
-            <br>
-
-            <form method="post" action="/newText">
-                Board Name: <input type="text" name="board" class="form-control">
-                List Name: <input type="text" name="list" class="form-control">
-                Text: <input type="text" name="text" class="form-control">
-                <br><button type="submit" class="btn btn-primary btn-block">New Text</button>
-            </form>
-        </div>
-
-        <ul id="list" class="list-group">
-        </ul>
-    </div>
+    Index
 </body>
+</html>
