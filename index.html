@@ -1,17 +1,44 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <script>
-var xhr = new XMLHttpRequest();
-xhr.open("POST", "/new/board", true);
-xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    <head>
+        <meta charset="UTF-8">
 
-// send the collected data as JSON
-xhr.send("{\"name\":\"what\"}");
-    </script>
-</head>
-<body>
-    Index
-</body>
+        <link rel="stylesheet" href="lib/material-icons.css">
+        <link rel="stylesheet" href="lib/material.blue-amber.min.css"/>
+        <script defer src="lib/material.min.js"></script>
+        <script defer src="lib/jquery-3.3.1.min.js"></script>
+
+        <script>
+        </script>
+    </head>
+    <body>
+        <div class="mdl-layout mdl-layout--fixed-drawer mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    <div class="mdl-layout-icon"><img src="logo.png" width=40 height=40></div>
+                    <div class="mdl-layout-spacer"></div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+                        <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
+                            <i class="material-icons">search</i>
+                        </label>
+                        <div class="mdl-textfield__expandable-holder">
+                            <input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp">
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="mdl-layout__drawer mdl-color-text--accent">
+                <span class="mdl-layout-title">Boards</span>
+                <nav id="navbar" class="mdl-navigation">
+                </nav>
+            </div>
+
+            <main class="mdl-layout__content">
+            <div class="page-content">
+                Index
+            </div>
+            </main>
+        </div>
+    </body>
 </html>
