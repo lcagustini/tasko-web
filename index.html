@@ -9,38 +9,12 @@
         <script src="lib/jquery-3.3.1.min.js"></script>
     </head>
     <body>
-        <template id="listTemplate">
-            <div style="margin: 8px; display: inline-block;" class="mdl-card mdl-shadow--2dp">
-                <div class="mdl-card__title mdl-card--expand">
-                    <h1 class="mdl-card__title-text" id="title"></h1>
-                    <div class="mdl-layout-spacer"></div>
-                    <div id="deleteButton" class="mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect">
-                        <i class="material-icons">clear</i>
-                    </div>
-                </div>
-
-                <div class="mdl-card__actions">
-                    <table style="width: 100%; height: 100%;" class="mdl-data-table mdl-js-data-table mdl-data-table--selectable">
-                        <tbody>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                            </tr>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                            </tr>
-                            <tr>
-                                <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </template>
-
         <div class="mdl-layout mdl-layout--fixed-drawer mdl-js-layout mdl-layout--fixed-header">
             <header class="mdl-layout__header">
                 <div class="mdl-layout__header-row">
                     <div class="mdl-layout-icon"><img src="logo.png" width=40 height=40></div>
+                    <div class="mdl-layout-spacer"></div>
+                    <div style="font-size: large;" id="board-title"></div>
                     <div class="mdl-layout-spacer"></div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
                         <label class="mdl-button mdl-js-button mdl-button--icon" for="fixed-header-drawer-exp">
@@ -56,19 +30,114 @@
             <div class="mdl-layout__drawer mdl-color-text--accent">
                 <span class="mdl-layout-title">Boards</span>
                 <nav id="navbar" class="mdl-navigation">
+                    <a style="text-align: center;" class="mdl-navigation__link"><i class="material-icons">add</i></a>
                 </nav>
             </div>
 
             <main class="mdl-layout__content">
             <div class="page-content">
+                <button style="width: calc(100% - 16px); margin: 8px;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                    <i class="material-icons">add</i>
+                </button>
             </div>
             </main>
         </div>
 
+        <template id="board-template">
+            <a class="mdl-navigation__link"></a>
+        </template>
+
+        <template id="list-template">
+            <table style="width: calc(100% - 16px); margin: 8px;" class="mdl-data-table mdl-shadow--2dp">
+                <thead>
+                    <tr>
+                        <th colspan=2 style="font-size: large;" class="mdl-data-table__cell--non-numeric"></th>
+                        <th style="width: 48px;">
+                            <button class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">more_vert</i>
+                            </button>
+
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect">
+                                <li class="mdl-menu__item">Some Action</li>
+                                <li class="mdl-menu__item mdl-menu__item--full-bleed-divider">Another Action</li>
+                                <li disabled class="mdl-menu__item">Disabled Action</li>
+                                <li class="mdl-menu__item">Yet Another Action</li>
+                            </ul>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+        </template>
+
+        <template id="row-template">
+            <tr>
+                <td style="width: 48px;">
+                    <label style="float: left;" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row[1]">
+                        <input type="checkbox" id="row[1]" class="mdl-checkbox__input" />
+                    </label>
+                </td>
+                <td colspan=2 class="mdl-data-table__cell--non-numeric"></td>
+            </tr>
+        </template>
+
         <script>
-            $.getJSON("/json", function(data){
-                json = data;
-            });
+            function updateListsForBoard(name){
+                let lists = json[name];
+                let i = 0;
+
+                let page = document.querySelector(".page-content");
+                while(page.children.length > 1){
+                    page.removeChild(page.firstChild);
+                }
+
+                for(key in lists){
+                    let list = document.importNode(document.querySelector("#list-template").content, true);
+                    list.querySelector(".mdl-data-table__cell--non-numeric").innerHTML = key;
+                    list.querySelector(".mdl-menu").setAttribute("for", "header["+i+"]");
+                    list.querySelector(".mdl-button").setAttribute("id", "header["+i+"]");
+                    i++;
+
+                    let table = list.querySelector("#table-body");
+                    for(text in lists[key]){
+                        let row = document.importNode(document.querySelector("#row-template").content, true);
+                        row.querySelector(".mdl-checkbox").setAttribute("for", "row["+i+"]");
+                        row.querySelector(".mdl-checkbox__input").setAttribute("id", "row["+i+"]");
+                        row.querySelector(".mdl-data-table__cell--non-numeric").innerHTML = lists[key][text].name;
+                        table.appendChild(row);
+                        i++;
+                    }
+
+                    page.prepend(list);
+                }
+
+                document.querySelector("#board-title").innerHTML = name;
+
+                componentHandler.upgradeAllRegistered();
+            }
+
+            function updateBoards(){
+                for(key in json){
+                    let board = document.importNode(document.querySelector("#board-template").content, true);
+                    board.children[0].innerHTML = key;
+                    board.children[0].addEventListener("click", function(e){
+                        updateListsForBoard(e.target.innerHTML);
+                    });
+
+                    document.querySelector("#navbar").prepend(board);
+                }
+            }
+
+            function updateApp(){
+                $.getJSON("/json", function(data){
+                    json = data;
+                    updateBoards();
+                    console.log(json);
+                });
+            }
+
+            updateApp();
         </script>
     </body>
 </html>
