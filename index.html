@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="lib/material-icons.css">
         <link rel="stylesheet" href="lib/material.blue-amber.min.css"/>
         <script src="lib/material.min.js"></script>
-        <script src="lib/jquery-3.3.1.min.js"></script>
     </head>
     <body>
         <div class="mdl-layout mdl-layout--fixed-drawer mdl-js-layout mdl-layout--fixed-header">
@@ -222,17 +221,22 @@
             }
 
             function updateApp(){
-                $.getJSON("/json", (data) => {
-                    json = data;
-                    let currentBoard = document.querySelector("#board-title").innerHTML;
+                let request = new XMLHttpRequest();
+                request.open("GET", "/json");
+                request.onreadystatechange = () => {
+                    if(request.readyState == 4 && request.status == 200){
+                        json = JSON.parse(request.responseText);
+                        let currentBoard = document.querySelector("#board-title").innerHTML;
 
-                    updateBoards();
-                    if(currentBoard != ""){
-                        updateListsForBoard(currentBoard);
+                        updateBoards();
+                        if(currentBoard != ""){
+                            updateListsForBoard(currentBoard);
+                        }
+
+                        console.log(json);
                     }
-
-                    console.log(json);
-                });
+                };
+                request.send(true);
             }
 
             updateApp();
