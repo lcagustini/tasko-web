@@ -30,13 +30,15 @@
             <div class="mdl-layout__drawer mdl-color-text--accent">
                 <span class="mdl-layout-title">Boards</span>
                 <nav id="navbar" class="mdl-navigation">
-                    <a style="text-align: center;" class="mdl-navigation__link"><i class="material-icons">add</i></a>
+                    <a id="board-add" style="text-align: center;" onclick="newBoard()" class="mdl-navigation__link">
+                        <i class="material-icons">add</i>
+                    </a>
                 </nav>
             </div>
 
             <main class="mdl-layout__content">
             <div class="page-content">
-                <button style="width: calc(100% - 16px); margin: 8px;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                <button id="list-add" style="width: calc(100% - 16px); margin: 8px;" onclick="newList()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                     <i class="material-icons">add</i>
                 </button>
             </div>
@@ -45,6 +47,24 @@
 
         <template id="board-template">
             <a class="mdl-navigation__link"></a>
+        </template>
+
+        <template id="board-input-template">
+            <form id="new-board-form" action="">
+                <div style="position: relative; bottom: 22px; margin: 15px; width: calc(100% - 30px);" class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="new-board-name">
+                    <label class="mdl-textfield__label" for="new-board-name">Name</label>
+                </div>
+            </form>
+        </template>
+
+        <template id="list-input-template">
+            <form id="new-list-form" action="">
+                <div style="position: relative; bottom: 22px; margin: 15px; width: calc(100% - 30px);" class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="new-list-name">
+                    <label class="mdl-textfield__label" for="new-list-name">Name</label>
+                </div>
+            </form>
         </template>
 
         <template id="list-template">
@@ -83,6 +103,72 @@
         </template>
 
         <script>
+            function newList(){
+                let currentBoard = document.querySelector("#board-title").innerHTML;
+
+                if(currentBoard != ""){
+                    let add = document.querySelector("#list-add");
+                    let page = document.querySelector(".page-content");
+                    let textField = document.importNode(document.querySelector("#list-input-template").content, true);
+
+                    page.replaceChild(textField, add);
+
+                    let input = page.children[page.children.length-1].querySelector("#new-list-name");
+                    input.addEventListener("focusout", () => {
+                        page.replaceChild(add, page.querySelector("#new-list-form"));
+                    });
+                    page.querySelector("#new-list-form").addEventListener("submit", (e) => {
+                        e.preventDefault();
+
+                        let request = new XMLHttpRequest();
+                        request.open("POST", "/new/list");
+                        request.setRequestHeader('Content-Type', 'application/json');
+                        request.onreadystatechange = () => {
+                            if(request.readyState == 4 && request.status == 204){
+                                updateApp();
+                            }
+                        };
+                        request.send(`{ \"name\": \"${page.querySelector("#new-list-name").value}\", \"board\": \"${currentBoard}\" }`, true);
+
+                        input.blur();
+                    });
+                    input.focus();
+
+                    componentHandler.upgradeAllRegistered();
+                }
+            }
+
+            function newBoard(){
+                let add = document.querySelector("#board-add");
+                let navbar = document.querySelector("#navbar");
+                let textField = document.importNode(document.querySelector("#board-input-template").content, true);
+
+                navbar.replaceChild(textField, add);
+
+                let input = navbar.children[navbar.children.length-1].querySelector("#new-board-name");
+                input.addEventListener("focusout", () => {
+                    navbar.replaceChild(add, navbar.querySelector("#new-board-form"));
+                });
+                navbar.querySelector("#new-board-form").addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    let request = new XMLHttpRequest();
+                    request.open("POST", "/new/board");
+                    request.setRequestHeader('Content-Type', 'application/json');
+                    request.onreadystatechange = () => {
+                        if(request.readyState == 4 && request.status == 204){
+                            updateApp();
+                        }
+                    };
+                    request.send(`{ \"name\": \"${navbar.querySelector("#new-board-name").value}\" }`, true);
+
+                    input.blur();
+                });
+                input.focus();
+
+                componentHandler.upgradeAllRegistered();
+            }
+
             function updateListsForBoard(name){
                 let lists = json[name];
                 let i = 0;
@@ -118,21 +204,33 @@
             }
 
             function updateBoards(){
+                let navbar = document.querySelector("#navbar");
+
+                while(navbar.children.length > 1){
+                    navbar.removeChild(navbar.firstChild);
+                }
+
                 for(key in json){
                     let board = document.importNode(document.querySelector("#board-template").content, true);
                     board.children[0].innerHTML = key;
-                    board.children[0].addEventListener("click", function(e){
+                    board.children[0].addEventListener("click", (e) => {
                         updateListsForBoard(e.target.innerHTML);
                     });
 
-                    document.querySelector("#navbar").prepend(board);
+                    navbar.prepend(board);
                 }
             }
 
             function updateApp(){
-                $.getJSON("/json", function(data){
+                $.getJSON("/json", (data) => {
                     json = data;
+                    let currentBoard = document.querySelector("#board-title").innerHTML;
+
                     updateBoards();
+                    if(currentBoard != ""){
+                        updateListsForBoard(currentBoard);
+                    }
+
                     console.log(json);
                 });
             }
