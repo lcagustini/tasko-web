@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
 
+        <link rel="shortcut icon" href="/logo.png">
         <link rel="stylesheet" href="lib/material-icons.css">
         <link rel="stylesheet" href="lib/material.blue-amber.min.css"/>
         <script src="lib/material.min.js"></script>
@@ -57,6 +58,15 @@
             </form>
         </template>
 
+        <template id="item-input-template">
+            <form id="new-item-form" action="">
+                <div style="position: relative; bottom: 22px; margin: 15px; width: calc(100% - 30px);" class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="new-item-name">
+                    <label class="mdl-textfield__label" for="new-item-name">Name</label>
+                </div>
+            </form>
+        </template>
+
         <template id="list-input-template">
             <form id="new-list-form" action="">
                 <div style="position: relative; bottom: 22px; margin: 15px; width: calc(100% - 30px);" class="mdl-textfield mdl-js-textfield">
@@ -77,8 +87,8 @@
                             </button>
 
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect">
-                                <li class="mdl-menu__item mdl-menu__item--full-bleed-divider">Add Item</li>
-                                <li class="mdl-menu__item mdl-color-text--red-500">Delete List</li>
+                                <li id="add-item" class="mdl-menu__item mdl-menu__item--full-bleed-divider">Add Item</li>
+                                <li id="delete-list" class="mdl-menu__item mdl-color-text--red-500">Delete List</li>
                             </ul>
                         </th>
                     </tr>
@@ -180,6 +190,11 @@
                     list.querySelector(".mdl-data-table__cell--non-numeric").innerHTML = key;
                     list.querySelector(".mdl-menu").setAttribute("for", "header["+i+"]");
                     list.querySelector(".mdl-button").setAttribute("id", "header["+i+"]");
+                    list.querySelector("#add-item").addEventListener("click", (e) => {
+                        let textField = document.importNode(document.querySelector("#item-input-template").content, true);
+
+                        e.target.parentElement.replaceChild(textField, e.target);
+                    });
                     i++;
 
                     let table = list.querySelector("#table-body");
