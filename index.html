@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
 
+        <title>Tasko</title>
         <link rel="shortcut icon" href="/logo.png">
         <link rel="stylesheet" href="lib/material-icons.css">
         <link rel="stylesheet" href="lib/material.blue-amber.min.css"/>
@@ -44,6 +45,28 @@
             </div>
             </main>
         </div>
+
+        <dialog class="mdl-dialog">
+            <h4 class="mdl-dialog__title">New item</h4>
+            <div class="mdl-dialog__content">
+                <form action="">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="item-name">
+                        <label class="mdl-textfield__label" for="item-name">Name</label>
+                    </div>
+                </form>
+                <form action="">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" id="item-note">
+                        <label class="mdl-textfield__label" for="item-note">Note</label>
+                    </div>
+                </form>
+            </div>
+            <div class="mdl-dialog__actions">
+                <button id="add-item-button" type="button" class="mdl-button">Add</button>
+                <button type="button" class="mdl-button close">Cancel</button>
+            </div>
+        </dialog>
 
         <template id="board-template">
             <a class="mdl-navigation__link"></a>
@@ -191,9 +214,28 @@
                     list.querySelector(".mdl-menu").setAttribute("for", "header["+i+"]");
                     list.querySelector(".mdl-button").setAttribute("id", "header["+i+"]");
                     list.querySelector("#add-item").addEventListener("click", (e) => {
-                        let textField = document.importNode(document.querySelector("#item-input-template").content, true);
+                        document.querySelector(".mdl-dialog").showModal();
 
-                        e.target.parentElement.replaceChild(textField, e.target);
+                        document.querySelector("#add-item-button").addEventListener("click", (e) => {
+                            let currentBoard = document.querySelector("#board-title").innerHTML;
+
+                            console.log(key);
+                            console.log(currentBoard);
+                            console.log(document.querySelector("#item-name").value);
+                        });
+                    });
+                    list.querySelector("#delete-list").addEventListener("click", (e) => {
+                        let currentBoard = document.querySelector("#board-title").innerHTML;
+
+                        let request = new XMLHttpRequest();
+                        request.open("DELETE", "/del/list");
+                        request.setRequestHeader('Content-Type', 'application/json');
+                        request.onreadystatechange = () => {
+                            if(request.readyState == 4 && request.status == 204){
+                                updateApp();
+                            }
+                        };
+                        request.send(`{ \"name\": \"${key}\", \"board\": \"${currentBoard}\" }`, true);
                     });
                     i++;
 
@@ -234,6 +276,10 @@
             }
 
             function updateApp(){
+                document.querySelector(".mdl-dialog").querySelector(".close").addEventListener("click", () => {
+                    document.querySelector(".mdl-dialog").close();
+                });
+
                 let request = new XMLHttpRequest();
                 request.open("GET", "/json");
                 request.onreadystatechange = () => {
