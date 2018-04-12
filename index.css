@@ -1,37 +1,37 @@
 @keyframes settings-down-anim {
     from {bottom: 130px;}
-    to {bottom: 15px;}
+    to {bottom: 20px;}
 }
 
 .settings-down {
-    animation: settings-down-anim 0.2s linear 0s 1 forwards;
+    animation: settings-down-anim 0.15s linear 0s 1 forwards;
 }
 
 @keyframes delete-board-down-anim {
     from {bottom: 80px;}
-    to {bottom: 15px;}
+    to {bottom: 20px;}
 }
 
 .delete-board-down {
-    animation: delete-board-down-anim 0.2s linear 0s 1 forwards;
+    animation: delete-board-down-anim 0.15s linear 0s 1 forwards;
 }
 
 @keyframes settings-up-anim {
-    from {bottom: 15px;}
+    from {bottom: 20px;}
     to {bottom: 130px;}
 }
 
 .settings-up {
-    animation: settings-up-anim 0.2s linear 0s 1 forwards;
+    animation: settings-up-anim 0.15s linear 0s 1 forwards;
 }
 
 @keyframes delete-board-up-anim {
-    from {bottom: 15px;}
+    from {bottom: 20px;}
     to {bottom: 80px;}
 }
 
 .delete-board-up {
-    animation: delete-board-up-anim 0.2s linear 0s 1 forwards;
+    animation: delete-board-up-anim 0.15s linear 0s 1 forwards;
 }
 
 #item-sidebar {
@@ -49,7 +49,7 @@
 }
 
 .open-sidebar {
-    animation: open-sidebar-anim 0.2s linear 0s 1 forwards;
+    animation: open-sidebar-anim 0.15s linear 0s 1 forwards;
 }
 
 @keyframes closed-sidebar-anim {
@@ -58,5 +58,5 @@
 }
 
 .closed-sidebar {
-    animation: closed-sidebar-anim 0.2s linear 0s 1 forwards;
+    animation: closed-sidebar-anim 0.15s linear 0s 1 forwards;
 }

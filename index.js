@@ -109,18 +109,21 @@ function newBoard(){
 }
 
 function newItem(e){
-    document.querySelector(".mdl-dialog").showModal();
-
     let currentList = e.target.parentElement.parentElement.parentElement.parentElement.querySelector(".mdl-data-table__cell--non-numeric").innerHTML;
     let item = (e) => {
         let currentBoard = document.querySelector("#board-title").innerHTML;
-        let name = document.querySelector("#item-name").value;
-        let note = document.querySelector("#item-note").value;
+        let name = document.querySelector("#title-input-sidebar").value;
+        let labels = document.querySelector("#labels-input-sidebar").value.split(/\s*,\s*/);
+        let note = document.querySelector("#note-input-sidebar").value;
+
+        e.preventDefault();
 
         requestJSON("POST",
             "/new/item",
             `{ \"name\": \"${name}\", \"board\": \"${currentBoard}\", \"list\": \"${currentList}\", \"note\": \"${note}\" }`,
-            () => { document.querySelector(".mdl-dialog").close(); updateApp(); }
+            (e) => {
+                updateApp(e);
+            }
         );
 
         document.querySelector("#add-item-button").removeEventListener("click", item);
@@ -154,7 +157,10 @@ function updateListsForBoard(name){
         list.querySelector(".mdl-menu").setAttribute("for", "header["+i+"]");
         list.querySelector(".mdl-button").setAttribute("id", "header["+i+"]");
 
-        list.querySelector("#add-item").addEventListener("click", newItem);
+        list.querySelector("#add-item").addEventListener("click", (e) => {
+            newItem(e);
+            sidebarShow(e);
+        });
 
         list.querySelector("#delete-list").addEventListener("click", (e) => {
             let currentBoard = document.querySelector("#board-title").innerHTML;
@@ -200,9 +206,6 @@ function updateListsForBoard(name){
 
                 row.querySelector(".mdl-data-table__cell--non-numeric").appendChild(label);
             }
-            row.querySelector(".mdl-data-table__cell--non-numeric").addEventListener("click", (e) => {
-                sidebarShow(e);
-            });
 
             row.querySelector(".mdl-checkbox__input").checked = lists[key][text].checked;
             row.querySelector(".mdl-checkbox__input").addEventListener("click", (e) => {
@@ -286,10 +289,6 @@ let sidebarShow = (e) => {
 };
 
 let setup = once(() => {
-    document.querySelector(".mdl-dialog").querySelector(".close").addEventListener("click", () => {
-        document.querySelector(".mdl-dialog").close();
-    });
-
     let toggleFAB = (e) => {
         document.querySelector("#delete-board-button").classList.toggle("delete-board-up");
         document.querySelector("#delete-board-button").classList.toggle("delete-board-down");

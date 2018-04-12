@@ -13,47 +13,53 @@
     <body>
         <div id="item-sidebar" class="closed-sidebar mdl-shadow--4dp">
             <span style="flex-shrink: 0; padding-left: 40px; line-height: 64px; font-family: 'Roboto','Helvetica','Arial',sans-serif; font-size: 20px; letter-spacing: .02em; font-weight: 400; box-sizing: border-box; color: rgb(255,215,64);">New Item</span>
-            <ul class="mdl-list">
-                <li class="mdl-list__item">
-                    <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-icon">title</i>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
-                            <input class="mdl-textfield__input" type="text" id="title-input-sidebar">
-                            <label class="mdl-textfield__label" for="title-input-sidebar">Title</label>
-                        </div>
-                    </span>
-                </li>
-                <li class="mdl-list__item">
-                    <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-icon">note</i>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
-                            <textarea class="mdl-textfield__input" rows=3 type="text" id="note-input-sidebar"></textarea>
-                            <label class="mdl-textfield__label" for="note-input-sidebar">Note</label>
-                        </div>
-                    </span>
-                </li>
-                <li class="mdl-list__item">
-                    <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-icon">access_time</i>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
-                            <input class="mdl-textfield__input" type="text" id="date-input-sidebar">
-                            <label class="mdl-textfield__label" for="date-input-sidebar">Due Date</label>
-                        </div>
-                    </span>
-                </li>
-                <li class="mdl-list__item">
-                    <span class="mdl-list__item-primary-content">
-                        <i class="material-icons mdl-list__item-icon">label</i>
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
-                            <input class="mdl-textfield__input" type="text" id="labels-input-sidebar">
-                            <label class="mdl-textfield__label" for="labels-input-sidebar">Labels</label>
-                        </div>
-                    </span>
-                </li>
-            </ul>
-            <button style="position:relative; left:5%; width: 90%;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <i class="material-icons">add</i>
-            </button>
+            <form id="dialog-form" action="">
+                <ul class="mdl-list">
+                    <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">title</i>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
+                                <input class="mdl-textfield__input" type="text" id="title-input-sidebar">
+                                <label class="mdl-textfield__label" for="title-input-sidebar">Title</label>
+                            </div>
+                        </span>
+                    </li>
+
+                    <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">note</i>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
+                                <textarea class="mdl-textfield__input" rows=3 type="text" id="note-input-sidebar"></textarea>
+                                <label class="mdl-textfield__label" for="note-input-sidebar">Note</label>
+                            </div>
+                        </span>
+                    </li>
+
+                    <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">access_time</i>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
+                                <input class="mdl-textfield__input" type="text" id="date-input-sidebar">
+                                <label class="mdl-textfield__label" for="date-input-sidebar">Due Date</label>
+                            </div>
+                        </span>
+                    </li>
+
+                    <li class="mdl-list__item">
+                        <span class="mdl-list__item-primary-content">
+                            <i class="material-icons mdl-list__item-icon">label</i>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 140px;">
+                                <input class="mdl-textfield__input" type="text" id="labels-input-sidebar">
+                                <label class="mdl-textfield__label" for="labels-input-sidebar">Labels</label>
+                            </div>
+                        </span>
+                    </li>
+                </ul>
+
+                <button id="add-item-button" style="position:relative; left:5%; width: 90%;" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    <i class="material-icons">add</i>
+                </button>
+            </form>
         </div>
 
         <div class="mdl-layout mdl-layout--fixed-drawer mdl-js-layout mdl-layout--fixed-header">
@@ -104,26 +110,6 @@
             </div>
             </main>
         </div>
-
-        <dialog class="mdl-dialog">
-        <h4 class="mdl-dialog__title">New item</h4>
-        <div class="mdl-dialog__content">
-            <form id="dialog-form" action="">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="item-name">
-                    <label class="mdl-textfield__label" for="item-name">Name</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" id="item-note">
-                    <label class="mdl-textfield__label" for="item-note">Note</label>
-                </div>
-            </form>
-        </div>
-        <div class="mdl-dialog__actions">
-            <button id="add-item-button" type="button" class="mdl-button">Add</button>
-            <button type="button" class="mdl-button close">Cancel</button>
-        </div>
-        </dialog>
 
         <template id="board-template">
             <a class="mdl-navigation__link"></a>
