@@ -200,8 +200,11 @@ function updateListsForBoard(name){
 
                 row.querySelector(".mdl-data-table__cell--non-numeric").appendChild(label);
             }
-            row.querySelector(".mdl-checkbox__input").checked = lists[key][text].checked;
+            row.querySelector(".mdl-data-table__cell--non-numeric").addEventListener("click", (e) => {
+                sidebarShow(e);
+            });
 
+            row.querySelector(".mdl-checkbox__input").checked = lists[key][text].checked;
             row.querySelector(".mdl-checkbox__input").addEventListener("click", (e) => {
                 let currentBoard = document.querySelector("#board-title").innerHTML;
                 let currentItem = e.target.parentElement.parentElement.parentElement.querySelector(".mdl-data-table__cell--non-numeric").firstChild.textContent;
@@ -263,6 +266,24 @@ function updateApp(){
         }
     );
 }
+
+let sidebarShow = (e) => {
+    e.stopPropagation();
+    document.querySelector("#item-sidebar").classList.toggle("open-sidebar");
+    document.querySelector("#item-sidebar").classList.toggle("closed-sidebar");
+
+    let hiddenEvent = (e) => {
+        if(document.querySelector("#item-sidebar").classList.contains("open-sidebar")){
+            if(!document.querySelector("#item-sidebar").contains(e.target)){
+                document.querySelector("#item-sidebar").classList.toggle("open-sidebar");
+                document.querySelector("#item-sidebar").classList.toggle("closed-sidebar");
+
+                window.removeEventListener("click", hiddenEvent);
+            }
+        }
+    }
+    window.addEventListener("click", hiddenEvent);
+};
 
 let setup = once(() => {
     document.querySelector(".mdl-dialog").querySelector(".close").addEventListener("click", () => {

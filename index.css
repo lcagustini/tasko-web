@@ -33,3 +33,30 @@
 .delete-board-up {
     animation: delete-board-up-anim 0.2s linear 0s 1 forwards;
 }
+
+#item-sidebar {
+    z-index: 99;
+    right: -240px;
+    position: fixed;
+    width:240px;
+    height: 100%;
+    background-color: #fafafa;
+}
+
+@keyframes open-sidebar-anim {
+    from {right: -240px;}
+    to {right: 0;}
+}
+
+.open-sidebar {
+    animation: open-sidebar-anim 0.2s linear 0s 1 forwards;
+}
+
+@keyframes closed-sidebar-anim {
+    from {right: 0;}
+    to {right: -240px;}
+}
+
+.closed-sidebar {
+    animation: closed-sidebar-anim 0.2s linear 0s 1 forwards;
+}
